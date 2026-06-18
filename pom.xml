@@ -10,7 +10,7 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>E-Commerce API</name>
+    <name>E-Commerce SB</name>
     <description>High-Performance REST API with Caching and Security</description>
 
     <parent>
