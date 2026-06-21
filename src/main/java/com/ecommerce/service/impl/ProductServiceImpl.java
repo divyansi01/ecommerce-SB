@@ -9,7 +9,11 @@ import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
+    @CacheEvict(value = {"products, products_category"}, allEntries = true)
     public ProductDTO createProduct(final ProductRequest productRequest){
         logger.info("Creating new product: {}", productRequest.getName());
         Product product = Product.builder()
@@ -43,11 +48,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
+    @CacheEvict(value = {"product, products, products_category"}, allEntries = true)
     public ProductDTO updateProduct(final Long Id, final ProductRequest productRequest) throws Exception{
         logger.info("Updating product with Id: {}",Id);
 
         Product existingProduct = productRepository.findById(Id)
-                .orElseThrow(() -> new Exception("Not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found"));
 
         Product updatedProduct = Product.builder()
                 .id(existingProduct.getId())
@@ -63,14 +69,16 @@ public class ProductServiceImpl implements ProductService {
         return convertToDTO(productRepository.save(updatedProduct));
     }
 
-    @Transactional
     @Override
+    @Cacheable(value = "product", key = "#id")
     public ProductDTO getProductById(final Long Id) throws Exception {
         logger.info("Fetching Product details of Product Id: {}", Id);
-        return convertToDTO(productRepository.findById(Id).orElseThrow(() -> new Exception("Not Found")));
+        return convertToDTO(productRepository.findById(Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found")));
     }
 
     @Override
+    @Cacheable(value = "products", key = "'all_active'")
     public List<ProductDTO> getAllActiveProducts(){
         logger.info("Fetching List of Active Products");
         return productRepository.findByIsActiveTrue()
@@ -78,12 +86,23 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Cacheable(value = "products_category", key = "#category")
+    public List<ProductDTO> getProductsByCategory(String category) {
+        logger.info("Fetching products by category: {}", category);
+        return productRepository.findActiveByCategoryOptimized(category)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     @Override
+    @CacheEvict(value = {"product", "products"}, allEntries = true)
     public ProductDTO updateStock(final Long id, final Integer quantity) throws Exception{
         logger.info("Updating stock details for Product Id: {}",id);
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new Exception("Not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found"));
 
         Product updatedProduct = Product.builder()
                 .id(existingProduct.getId())
@@ -94,11 +113,14 @@ public class ProductServiceImpl implements ProductService {
         return convertToDTO(productRepository.save(updatedProduct));
     }
 
+    @Transactional
+    @Override
+    @CacheEvict(value = {"product", "products", "products_category"}, allEntries = true)
     public void deleteProduct(final Long id) throws Exception{
         logger.info("Deleting product with id: {}", id);
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new Exception("Product not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found"));
 
         productRepository.delete(product);
     }

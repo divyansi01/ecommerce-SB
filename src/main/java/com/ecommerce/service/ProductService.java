@@ -1,6 +1,5 @@
 package com.ecommerce.service;
 
-import com.ecommerce.model.Product;
 import com.ecommerce.model.ProductDTO;
 import com.ecommerce.model.ProductRequest;
 
@@ -14,6 +13,8 @@ public interface ProductService {
     ProductDTO getProductById(final Long Id) throws Exception;
 
     List<ProductDTO> getAllActiveProducts();
+
+    List<ProductDTO> getProductsByCategory(String category);
 
     ProductDTO updateStock(final Long id, final Integer quantity) throws Exception;
 

@@ -67,4 +67,12 @@ public class ProductController {
                 ApiResponse.success(null, "Product deleted successfully")
         );
     }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ApiResponse<List<ProductDTO>>> getProductsByCategory(
+            @PathVariable String category) {
+        return ResponseEntity.ok(
+                ApiResponse.success(productService.getProductsByCategory(category), "Products retrieved successfully")
+        );
+    }
 }
