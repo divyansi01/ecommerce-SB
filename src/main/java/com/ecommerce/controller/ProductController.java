@@ -47,7 +47,7 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success(productService.getProductById(Id), "Product retrieved successfully"));
     }
 
-    @GetMapping(value = "/product/{id}")
+    @GetMapping(value = "/product")
     @Operation(summary = "This endpoint is responsible for getting list of all products")
     public ResponseEntity<ApiResponse<List<ProductDTO>>> getAllProducts(){
         return ResponseEntity.ok(ApiResponse.success(productService.getAllActiveProducts(), "Products retrieved successfully"));
