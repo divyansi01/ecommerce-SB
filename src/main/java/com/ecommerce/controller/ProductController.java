@@ -16,7 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(
-        value = "/api/v1",
+        value = "/v1",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 public class ProductController {
