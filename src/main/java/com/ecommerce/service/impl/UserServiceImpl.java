@@ -98,6 +98,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("User does not exists with username:", username)));
+    }
+
+    @Override
     public List<UserDTO> getAllUsers(){
         return userRepository.findAll().stream().map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -111,7 +117,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if(Objects.isNull(auth) || !auth.isAuthenticated()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Authenticated");
         }
-        return loadUserByUsername(auth.getName());
+        return getUserByUsername(auth.getName());
     }
 
     @Override

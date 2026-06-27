@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     @CacheEvict(value = {"product, products, products_category"}, allEntries = true)
-    public ProductDTO updateProduct(final Long Id, final ProductRequest productRequest) throws Exception{
+    public ProductDTO updateProduct(final Long Id, final ProductRequest productRequest){
         logger.info("Updating product with Id: {}",Id);
 
         Product existingProduct = productRepository.findById(Id)
@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Cacheable(value = "product", key = "#id")
-    public ProductDTO getProductById(final Long Id) throws Exception {
+    public ProductDTO getProductById(final Long Id){
         logger.info("Fetching Product details of Product Id: {}", Id);
         return convertToDTO(productRepository.findById(Id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found")));
@@ -99,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     @CacheEvict(value = {"product", "products"}, allEntries = true)
-    public ProductDTO updateStock(final Long id, final Integer quantity) throws Exception{
+    public ProductDTO updateStock(final Long id, final Integer quantity){
         logger.info("Updating stock details for Product Id: {}",id);
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found"));
@@ -116,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     @CacheEvict(value = {"product", "products", "products_category"}, allEntries = true)
-    public void deleteProduct(final Long id) throws Exception{
+    public void deleteProduct(final Long id){
         logger.info("Deleting product with id: {}", id);
 
         Product product = productRepository.findById(id)
