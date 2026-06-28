@@ -16,6 +16,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findByNameIgnoreCase(String name);
 
-    @Query("SELECT p FROM Product p WHERE p.category = :category AND p.isActive = true")
+    @Query("""
+SELECT p FROM Product p
+WHERE LOWER(p.category) = LOWER(:category)
+AND p.isActive = true
+""")
     List<Product> findActiveByCategoryOptimized(String category);
 }

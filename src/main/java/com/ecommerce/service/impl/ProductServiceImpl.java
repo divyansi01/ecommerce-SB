@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    @CacheEvict(value = {"products, products_category"}, allEntries = true)
+    @CacheEvict(value = {"products", "products_category"}, allEntries = true)
     public ProductDTO createProduct(final ProductRequest productRequest){
         logger.info("Creating new product: {}", productRequest.getName());
         Product product = Product.builder()
@@ -48,11 +48,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    @CacheEvict(value = {"product, products, products_category"}, allEntries = true)
-    public ProductDTO updateProduct(final Long Id, final ProductRequest productRequest){
-        logger.info("Updating product with Id: {}",Id);
+    @CacheEvict(value = {"product", "products", "products_category"}, allEntries = true)
+    public ProductDTO updateProduct(final Long id, final ProductRequest productRequest){
+        logger.info("Updating product with Id: {}",id);
 
-        Product existingProduct = productRepository.findById(Id)
+        Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found"));
 
         Product updatedProduct = Product.builder()
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
                 .price(productRequest.getPrice())
                 .stockQuantity(productRequest.getStockQuantity())
                 .category(productRequest.getCategory())
-                .isActive(existingProduct.getIsActive())
+                .isActive(existingProduct.isActive())
                 .createdAt(existingProduct.getCreatedAt())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -71,9 +71,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Cacheable(value = "product", key = "#id")
-    public ProductDTO getProductById(final Long Id){
-        logger.info("Fetching Product details of Product Id: {}", Id);
-        return convertToDTO(productRepository.findById(Id)
+    public ProductDTO getProductById(final Long id){
+        logger.info("Fetching Product details of Product Id: {}", id);
+        return convertToDTO(productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found")));
     }
 
@@ -104,13 +104,10 @@ public class ProductServiceImpl implements ProductService {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found"));
 
-        Product updatedProduct = Product.builder()
-                .id(existingProduct.getId())
-                .stockQuantity(quantity)
-                .updatedAt(LocalDateTime.now())
-                .build();
+        existingProduct.setStockQuantity(quantity);
+        existingProduct.setUpdatedAt(LocalDateTime.now());
 
-        return convertToDTO(productRepository.save(updatedProduct));
+        return convertToDTO(productRepository.save(existingProduct));
     }
 
     @Transactional
@@ -132,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
                 .description(product.getDescription())
                 .category(product.getCategory())
                 .stockQuantity(product.getStockQuantity())
-                .isActive(product.getIsActive())
+                .isActive(product.isActive())
                 .price(product.getPrice())
                 .build();
     }

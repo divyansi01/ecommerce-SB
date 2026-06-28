@@ -3,6 +3,7 @@ package com.ecommerce.service;
 import com.ecommerce.model.ProductDTO;
 import com.ecommerce.model.ProductRequest;
 import com.ecommerce.repository.ProductRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

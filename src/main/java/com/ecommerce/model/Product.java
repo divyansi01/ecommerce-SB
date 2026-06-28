@@ -27,7 +27,7 @@ public class Product {
     private BigDecimal price;
     private Integer stockQuantity;
     private String category;
-    private Boolean isActive;
+    private boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

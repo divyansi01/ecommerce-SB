@@ -8,9 +8,9 @@ import java.util.List;
 public interface ProductService {
     ProductDTO createProduct(final ProductRequest productRequest);
 
-    ProductDTO updateProduct(final Long Id, final ProductRequest productRequest);
+    ProductDTO updateProduct(final Long id, final ProductRequest productRequest);
 
-    ProductDTO getProductById(final Long Id);
+    ProductDTO getProductById(final Long id);
 
     List<ProductDTO> getAllActiveProducts();
 
