@@ -62,6 +62,7 @@ public class SecurityConfigForJwt {
                 .requestMatchers("/v1/performance/**").permitAll()
                 .requestMatchers("/v1/cache/**").permitAll()
                 .requestMatchers("/v1/users/**").permitAll()
+                .requestMatchers("/v1/order/**").permitAll()
                         .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()

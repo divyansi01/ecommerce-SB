@@ -2,6 +2,8 @@
 
 A high-performance REST API for an e-commerce platform built with Spring Boot, featuring advanced caching, JWT authentication, real-time performance monitoring, and comprehensive error handling.
 
+---
+
 ## 🌟 Features
 
 ### Core Features
@@ -10,16 +12,29 @@ A high-performance REST API for an e-commerce platform built with Spring Boot, f
 - ✅ **JWT Authentication** - Secure token-based authentication with BCrypt password hashing
 - ✅ **Role-Based Access Control** - ADMIN and USER roles with permission-based endpoints
 
-### Performance & Optimization
-- ✅ **Redis Caching** - 50x performance improvement on repeated queries with intelligent cache invalidation
-- ✅ **Database Indexing** - Strategic indexes on frequently queried columns (category, price, active status)
-- ✅ **Query Optimization** - Efficient SQL with proper select clauses and joins
+---
 
-### Advanced Features
-- ✅ **Comprehensive Logging** - AOP-based logging for all service methods with performance metrics
-- ✅ **Global Exception Handling** - Centralized error handling with detailed error responses
-- ✅ **API Documentation** - Interactive Swagger/OpenAPI documentation
-- ✅ **Health Checks** - Actuator endpoints for monitoring application health
+### ⚡ Event-Driven Architecture (Kafka Integration - NEW)
+
+- ⚡ **Apache Kafka Integration** - Asynchronous event-driven communication between services
+- 🛒 **Order Service (Producer)** - Publishes order events to Kafka
+- 📦 **Inventory Service (Consumer)** - Updates stock automatically based on events
+- 📧 **Email Service (Consumer)** - Sends order confirmation, shipping, and delivery emails
+- 🔄 **Decoupled Microservices** - Services communicate via Kafka instead of direct calls
+- 🚀 **High Scalability** - Multiple consumers process events in parallel
+- 🧵 **Concurrent Processing** - Kafka partitions enable multi-threaded consumption
+
+---
+
+## 📡 Kafka-Based Order Flow
+
+When a user places an order, the system follows this flow:
+
+```text
+User → Order Service → Kafka Topic (order-events)
+                                 → Inventory Service
+                                 → Email Service
+```
 
 ## 📋 Prerequisites
 
@@ -184,41 +199,6 @@ curl -X GET http://localhost:8081/api/v1/products \
   -H "Authorization: Bearer eyJhbGciOiJIUzUxMiJ9..."
 ```
 
----
-
-## 📡 API Endpoints
-
-### Products
-
-| Method | Endpoint | Auth | Role | Description |
-|--------|----------|------|------|-------------|
-| GET | `/v1/products` | ❌ | Any | Get all active products |
-| GET | `/v1/products/{id}` | ❌ | Any | Get product by ID |
-| POST | `/v1/products` | ✅ | ADMIN | Create new product |
-| PUT | `/v1/products/{id}` | ✅ | ADMIN | Update product |
-| DELETE | `/v1/products/{id}` | ✅ | ADMIN | Delete product |
-
-### Users
-
-| Method | Endpoint | Auth | Role | Description |
-|--------|----------|------|------|-------------|
-| POST | `/v1/auth/login` | ❌ | Any | Login and get token |
-| GET | `/v1/users/me` | ✅ | Any | Get current user info |
-| GET | `/v1/users/{id}` | ❌ | Any | Get user by ID |
-| POST | `/v1/users` | ✅ | ADMIN | Create new user |
-| PUT | `/v1/users/{id}` | ✅ | ADMIN/Self | Update user |
-| DELETE | `/v1/users/{id}` | ✅ | ADMIN | Delete user |
-
-### Performance & Monitoring
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/v1/health` | Health check |
-| GET | `/actuator/metrics` | Application metrics |
-| GET | `/actuator/prometheus` | Prometheus metrics |
-
----
-
 ## 🗄️ Database Schema
 
 ### Users Table
@@ -301,15 +281,6 @@ class ProductServiceTest {
     }
 }
 
-// Integration test example
-@SpringBootTest
-@AutoConfigureMockMvc
-class ProductControllerIntegrationTest {
-    @Test
-    void testCreateProduct_Success() throws Exception {
-        // Test full request/response cycle
-    }
-}
 ```
 
 ---
@@ -334,22 +305,6 @@ This starts:
 - Redis (port 6379)
 
 ---
-
-## 📊 Performance & Monitoring
-
-### View Application Metrics
-
-```bash
-# All metrics
-curl http://localhost:8081/api/actuator/metrics
-
-# Prometheus format
-curl http://localhost:8081/api/actuator/prometheus
-
-# Specific metric
-curl http://localhost:8081/api/actuator/metrics/http.requests.count
-```
-
 ### Cache Performance
 
 ```bash
@@ -451,13 +406,11 @@ For issues, questions, or suggestions:
 
 ## 🎯 Future Enhancements
 
-- [ ] Order Management System
 - [ ] Payment Gateway Integration (Stripe/PayPal)
-- [ ] Notification Service (Email/SMS)
+- [ ] Notification Service (SMS)
 - [ ] Search Engine Integration (Elasticsearch)
 - [ ] GraphQL API
 - [ ] Microservices Architecture
-- [ ] Message Queue (Kafka/RabbitMQ)
 - [ ] Distributed Caching (Redis Cluster)
 - [ ] Real-time Updates (WebSockets)
 
