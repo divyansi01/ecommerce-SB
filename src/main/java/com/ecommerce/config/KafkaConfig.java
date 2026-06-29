@@ -69,6 +69,7 @@ public class KafkaConfig {
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderEvent>> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, OrderEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
         factory.setCommonErrorHandler(new org.springframework.kafka.listener.DefaultErrorHandler());
         factory.setConcurrency(3);  // Process 3 messages in parallel
         factory.getContainerProperties().setPollTimeout(3000);

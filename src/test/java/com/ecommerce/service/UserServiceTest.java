@@ -26,7 +26,7 @@ public class UserServiceTest {
     @Test
     @DisplayName("Get User By Id")
     public void getUserById() {
-        User user = userService.getUserById(1L);
+        UserDTO user = userService.getUserById(1L);
 
         assertAll("userById",
                 () -> assertNotNull(user),
@@ -38,7 +38,7 @@ public class UserServiceTest {
     @Test
     @DisplayName("Get User By Id - Verify Email")
     public void getUserById_VerifyEmail() {
-        User user = userService.getUserById(1L);
+        UserDTO user = userService.getUserById(1L);
 
         assertAll("userEmail",
                 () -> assertNotNull(user),
@@ -124,9 +124,9 @@ public class UserServiceTest {
 
         assertAll("createAdminUser",
                 () -> assertNotNull(createdUser),
-                () -> assertEquals(createdUser.getUsername(), "newadmin"),
-                () -> assertEquals(createdUser.getEmail(), "newadmin@test.com"),
-                () -> assertEquals(createdUser.getRole(), "ADMIN"),
+                () -> assertEquals("newadmin", createdUser.getUsername()),
+                () -> assertEquals("newadmin@test.com", createdUser.getEmail()),
+                () -> assertEquals("ADMIN", createdUser.getRole()),
                 () -> assertEquals(userRepository.count(), initialCount + 1));
     }
 
@@ -146,8 +146,8 @@ public class UserServiceTest {
 
         assertAll("createRegularUser",
                 () -> assertNotNull(createdUser),
-                () -> assertEquals(createdUser.getUsername(), "newuser"),
-                () -> assertEquals(createdUser.getRole(), "USER"),
+                () -> assertEquals("newuser", createdUser.getUsername()),
+                () -> assertEquals("USER", createdUser.getRole()),
                 () -> assertEquals(userRepository.count(), initialCount + 1));
     }
 
@@ -164,7 +164,7 @@ public class UserServiceTest {
 
         assertAll("defaultRole",
                 () -> assertNotNull(createdUser),
-                () -> assertEquals(createdUser.getRole(), "USER"));
+                () -> assertEquals("USER", createdUser.getRole()));
     }
 
     @Test
@@ -179,11 +179,11 @@ public class UserServiceTest {
 
         UserDTO createdUser = userService.createUser(request);
 
-        User fetchedUser = userService.getUserById(createdUser.getId());
+        UserDTO fetchedUser = userService.getUserById(createdUser.getId());
         assertAll("verifyInDatabase",
                 () -> assertNotNull(fetchedUser),
-                () -> assertEquals(fetchedUser.getUsername(), "databaseuser"),
-                () -> assertEquals(fetchedUser.getEmail(), "databaseuser@test.com"));
+                () -> assertEquals("databaseuser", fetchedUser.getUsername()),
+                () -> assertEquals("databaseuser@test.com", fetchedUser.getEmail()));
     }
 
     @Test
@@ -193,7 +193,7 @@ public class UserServiceTest {
 
         assertAll("userPassword",
                 () -> assertNotNull(userDetails.getPassword()),
-                () -> assertTrue(userDetails.getPassword().length() > 0));
+                () -> assertFalse(userDetails.getPassword().isEmpty()));
     }
 
     @Test

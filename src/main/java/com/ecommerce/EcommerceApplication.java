@@ -7,7 +7,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @SpringBootApplication
-@EnableCaching
 @EnableAspectJAutoProxy
 @EnableMethodSecurity(prePostEnabled = true)
 public class EcommerceApplication {

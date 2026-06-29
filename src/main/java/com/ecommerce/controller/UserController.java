@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/users")
 @Tag(name = "Users", description = "User management APIs")
 public class UserController {
 
@@ -42,7 +42,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID")
-    public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<UserDTO>> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(
                 ApiResponse.success(userService.getUserById(id), "User retrieved successfully")
         );

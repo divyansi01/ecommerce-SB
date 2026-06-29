@@ -87,8 +87,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getUserById(final Long id){
-        return userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User does not exists with id:",id)));
+    public UserDTO getUserById(final Long id){
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User does not exists with id:",id)));
+    return convertToDTO(user);
     }
 
     @Override
